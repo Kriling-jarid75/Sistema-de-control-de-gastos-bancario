@@ -325,12 +325,10 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
     }
 
     private void limpiarCampos() {
-
         txtSaldoActual.setText("0000.00");
         txtSaldoAUsar.setText("0000.00");
         txtSaldoNuevo.setText("0000.00");
         cmbTipoOperacion.setSelectedItem(">> Seleccione el Tipo de Operación <<");
-
     }
 
     public void recuperarRegistros() {
