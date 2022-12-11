@@ -1,0 +1,3 @@
+contraseña para la base de datos es del 1 al 9
+
+contraseña para el login de la bd es Kriling75$

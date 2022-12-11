@@ -30,6 +30,7 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
     Calendar calendario;
     String valor;
     double cantidadTotal = 0;
+    String cantidad_1;
     double cantidad1, cantidad2;
 
     public VistaPrincipal1() {
@@ -42,11 +43,11 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
         dia = calendar.get(Calendar.DATE);
         txtFecha.setText(año + "-" + mes + "-" + dia);
         recuperarRegistros();
-        txtSaldoActual.setText("0000.00");
+        txtSaldoActual.setEditable(false);
         txtSaldoAUsar.setText("0000.00");
-        txtSaldoNuevo.setText("0000.00");
+
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -112,6 +113,11 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
         jLabel6.setText("Saldo nuevo del estado de cuenta: $");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 130, -1, -1));
 
+        jTableRegistros = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex){
+                return false;
+            }
+        };
         jTableRegistros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -126,6 +132,12 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTableRegistros.getTableHeader().setReorderingAllowed(false);
+        jTableRegistros.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableRegistrosMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(jTableRegistros);
@@ -184,11 +196,10 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        
         if (validarCamposVacios() == true) {
             JOptionPane.showMessageDialog(null,
-                    " [Hay campos vacios] - A continuación escriba algo en ellos y "
-                    + "proceda a elegir el tipo de operación, Por favor :D ",
+                    " [Hay campos vacios] - A continuación escriba algo en ellos y/o seleccione un valor de la tabla "
+                    + " o también proceda a elegir el tipo de operación, Por favor :D ",
                     "Mensaje de Alerta !! ", JOptionPane.INFORMATION_MESSAGE);
 
         } else {
@@ -218,27 +229,34 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /* public static double convertToDouble(String recivoUnCadena) {
+        String a = recivoUnCadena;
+        //replace all commas if present with no comma
+        //String s = a.replaceAll(",", "").trim();
+        // if there are any empty spaces also take it out.          
+        String f = a.replaceAll(" ", "");
+        //now convert the string to double
+        double result = Double.parseDouble(f);
+        return result; // return the result
+    }*/
+
     private void cmbTipoOperacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoOperacionActionPerformed
-       
-///*Lo que realiza este fragmento de código es validar que opción escogio dentro del combo box*/
-//        if (validarCamposVacios() == true) {
-//            JOptionPane.showMessageDialog(null,
-//                    "Antes de seleccionar el Tipo de Operación asegurese de llenar los campos primero !!",
-//                    "Mensaje de Alerta", JOptionPane.INFORMATION_MESSAGE);
-//
-//            cmbTipoOperacion.setSelectedItem(">> Seleccione el Tipo de Operación <<");
 
-//        } else {
-
-        cantidad1 = Double.parseDouble(txtSaldoActual.getText());
+        cantidad1 = Double.parseDouble(txtSaldoActual.getText().replaceAll("[^0-9.]", ""));
         cantidad2 = Double.parseDouble(txtSaldoAUsar.getText());
 
         int combo = cmbTipoOperacion.getSelectedIndex();
 
+        System.out.println(cantidad1);
+        System.out.println(cantidad2);
+
         switch (combo) {
             case 1:
                 cantidadTotal = cantidad1 + cantidad2;
+                System.out.println(cantidadTotal);
                 txtSaldoNuevo.setText(String.valueOf(cantidadTotal));
+
+                System.out.println(txtSaldoNuevo.getText());
 //                    System.out.println("Resultado de la suma de un deposito de unc cliente " + cantidadTotal); // Resultado => de la suma
 //                  System.out.println(String.valueOf(cantidadTotal));
                 break;
@@ -267,6 +285,21 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
 //        }
 
     }//GEN-LAST:event_cmbTipoOperacionActionPerformed
+
+    private void jTableRegistrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableRegistrosMouseClicked
+        //ESTE CODIGO NOS PERMITE OBTNER EL DATO de una tabla seleccionando la fila
+        int seleccionar = jTableRegistros.rowAtPoint(evt.getPoint());
+
+        txtSaldoActual.setText(String.valueOf(jTableRegistros.getValueAt(seleccionar, 3)));
+        /* 
+        vistaL5.txtNombre.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 1)));
+        vistaL5.txtLocalidad.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 2)));
+        vistaL5.txtCalleUno.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 3)));
+        vistaL5.txtCalleDos1.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 4)));
+        vistaL5.txtCalleTres.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 5)));
+        vistaL5.txtReferencias.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 6)));
+     vistaL5.txtTelefono.setText(String.valueOf(TablaClientes5.getValueAt(seleccionar, 7)));         */  //
+    }//GEN-LAST:event_jTableRegistrosMouseClicked
 
     /**
      * @param args the command line arguments
@@ -304,13 +337,14 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
     }
 
     private void registroDeGastosGenerales() {
+       
 
         ConexionBD objCBD = new ConexionBD();
 
         objCBD.realizarConexion();
         ArrayList instruccionBD = new ArrayList();
         instruccionBD.add("{call sp_insertarGastoNuevo(?,?,?,?,?)}");
-        instruccionBD.add(txtSaldoActual.getText());
+        instruccionBD.add(cantidad1);
         instruccionBD.add(txtSaldoAUsar.getText());
         instruccionBD.add(txtSaldoNuevo.getText());
         instruccionBD.add(cmbTipoOperacion.getSelectedItem());
@@ -366,6 +400,7 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
                 modelo.addRow(datos);
             }
             jTableRegistros.setModel(modelo);
+
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "No se pudo realizar la consulta" + ex, "ERROR", JOptionPane.ERROR_MESSAGE);
 
@@ -377,9 +412,9 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
 
     private boolean validarCamposVacios() {
 
-        boolean x = txtSaldoActual.getText().equalsIgnoreCase("0000.00")
-                || txtSaldoAUsar.getText().equalsIgnoreCase("0000.00");
-
+        boolean x = txtSaldoActual.getText().equalsIgnoreCase(" ")
+                || txtSaldoAUsar.getText().equalsIgnoreCase("0000.00")
+                || cmbTipoOperacion.getSelectedItem().equals(">> Seleccione el Tipo de Operación <<");
         return x;
 
     }
