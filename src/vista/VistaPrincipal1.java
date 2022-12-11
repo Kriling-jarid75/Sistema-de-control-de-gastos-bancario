@@ -242,9 +242,10 @@ public class VistaPrincipal1 extends javax.swing.JFrame {
 
     private void cmbTipoOperacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoOperacionActionPerformed
 
+        //De esta manera me permite obtener el string que se esta tomando desde el txt y asi emite la coma que aparece
         cantidad1 = Double.parseDouble(txtSaldoActual.getText().replaceAll("[^0-9.]", ""));
         cantidad2 = Double.parseDouble(txtSaldoAUsar.getText());
-
+        
         int combo = cmbTipoOperacion.getSelectedIndex();
 
         System.out.println(cantidad1);
